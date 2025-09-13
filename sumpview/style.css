@@ -1,0 +1,194 @@
+/*
+Theme Name: SumpView
+Theme URI: https://arcraven.com/heavenBeats
+Author: ARCRAVEN
+Author URI: https://arcraven.com
+Description: A minimalist, clean theme designed for the Sump tuous Recordings label, featuring a persistent audio player and custom animations.
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: sumpview
+*/
+
+/*--------------------------------------------------------------
+>>> TABLE OF CONTENTS:
+----------------------------------------------------------------
+1.0 Normalize & Globals
+2.0 Player Container (Main Bar)
+3.0 Player Sections (Track Info, Controls, Extras)
+4.0 Fullscreen Overlay & Layout
+5.0 Fullscreen Content (Queue, Main Area)
+6.0 Utility Styles
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+1.0 Normalize & Globals
+--------------------------------------------------------------*/
+:root {
+    --primary-bg: #14182b;
+    --accent-red: #c70000;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --font-main: 'Inter', sans-serif; /* Assumes Inter is loaded via a service or @font-face */
+}
+
+body {
+    font-family: var(--font-main);
+    margin: 0;
+    padding: 0;
+    /* Add padding to the bottom to prevent content from being hidden by the player */
+    padding-bottom: 92px; /* Height of the player */
+}
+
+* {
+    box-sizing: border-box;
+}
+
+
+/*--------------------------------------------------------------
+2.0 Player Container (Main Bar)
+--------------------------------------------------------------*/
+.player-container {
+    width: 100%;
+    background-color: var(--primary-bg);
+    color: var(--text-primary);
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    align-items: center;
+    padding: 15px 30px;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+/*--------------------------------------------------------------
+3.0 Player Sections (Track Info, Controls, Extras)
+--------------------------------------------------------------*/
+
+/* Track Info (Left) */
+.track-info { display: flex; align-items: center; min-width: 250px; justify-self: start; }
+.track-info img { width: 60px; height: 60px; border-radius: 4px; margin-right: 15px; object-fit: cover; }
+.track-info .details { display: flex; flex-direction: column; }
+.track-info .title { font-weight: 500; font-size: 16px; margin-bottom: 4px; color: var(--text-primary); }
+.track-info .artist { font-size: 14px; color: var(--text-secondary); }
+
+/* Player Controls (Center) */
+.player-controls { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 600px; justify-self: center; }
+.player-controls .buttons { display: flex; align-items: center; margin-bottom: 10px; }
+.player-controls .control-btn { fill: var(--text-secondary); cursor: pointer; transition: all 0.2s ease; }
+.player-controls .control-btn:hover { fill: var(--text-primary); transform: scale(1.1); }
+.player-controls .control-btn.active { fill: var(--accent-red); }
+.player-controls .play-pause-btn { width: 40px; height: 40px; background-color: var(--text-primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 20px; cursor: pointer; transition: background-color 0.2s ease; }
+.player-controls .play-pause-btn:hover { background-color: #f0f0f0; }
+.player-controls .play-pause-btn svg { fill: var(--primary-bg); width: 20px; height: 20px; }
+.player-controls .progress-bar-wrapper { display: flex; align-items: center; width: 100%; }
+.player-controls .time { font-size: 12px; color: var(--text-secondary); min-width: 40px; text-align: center; }
+.player-controls .progress-bar { flex-grow: 1; height: 4px; background-color: rgba(255, 255, 255, 0.2); border-radius: 2px; margin: 0 10px; cursor: pointer; position: relative; }
+.player-controls .progress-bar-inner { width: 0%; height: 100%; background-color: var(--accent-red); border-radius: 2px; position: relative; }
+
+/* Player Extras (Right) */
+.player-extras { display: flex; align-items: center; justify-content: flex-end; min-width: 250px; justify-self: end; }
+.player-extras .control-btn { fill: var(--text-secondary); cursor: pointer; transition: all 0.2s ease; margin: 0 10px; }
+.player-extras .control-btn:hover { fill: var(--text-primary); transform: scale(1.1); }
+.player-extras .volume-control { display: flex; align-items: center; margin-left: 10px; }
+.player-extras .volume-control svg { fill: var(--text-secondary); cursor: pointer; transition: fill 0.2s ease; }
+.player-extras .volume-control svg:hover { fill: var(--text-primary); }
+.player-extras .volume-slider { -webkit-appearance: none; appearance: none; width: 80px; height: 4px; background: rgba(255, 255, 255, 0.2); outline: none; border-radius: 2px; margin-left: 10px; }
+.player-extras .volume-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 12px; height: 12px; background: var(--text-primary); cursor: pointer; border-radius: 50%; }
+.player-extras .volume-slider::-moz-range-thumb { width: 12px; height: 12px; background: var(--primary-bg); cursor: pointer; border-radius: 50%; }
+
+
+/*--------------------------------------------------------------
+4.0 Fullscreen Overlay & Layout
+--------------------------------------------------------------*/
+.player-fullscreen-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary-bg);
+    z-index: 9999;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: stretch;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.player-fullscreen-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/*--------------------------------------------------------------
+5.0 Fullscreen Content (Queue, Main Area)
+--------------------------------------------------------------*/
+
+/* Fullscreen Sidebar Queue Section */
+.fullscreen-queue { width: 30%; height: 100%; background-color: rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; border-right: 1px solid rgba(255, 255, 255, 0.1); padding: 20px; }
+.fullscreen-queue .tabs { margin-bottom: 10px; flex-shrink: 0; padding-top: 40px; }
+.fullscreen-queue .tabs .tab { background: none; border: none; color: var(--text-secondary); font-size: 16px; padding: 5px 10px; cursor: pointer; }
+.fullscreen-queue .tabs .tab.active { color: var(--text-primary); border-bottom: 2px solid var(--accent-red); }
+.fullscreen-queue .queue-list { list-style: none; margin: 0; padding: 0 10px 0 0; overflow-y: auto; flex-grow: 1; }
+.fullscreen-queue .queue-item { display: flex; align-items: center; padding: 10px; border-radius: 4px; cursor: pointer; transition: background-color 0.2s ease; }
+.fullscreen-queue .queue-item:hover { background-color: rgba(255, 255, 255, 0.1); }
+.fullscreen-queue .queue-item.now-playing { background-color: rgba(255, 255, 255, 0.15); }
+.fullscreen-queue .queue-item img { width: 40px; height: 40px; border-radius: 4px; margin-right: 15px; flex-shrink: 0; }
+.fullscreen-queue .queue-item .details .title { font-weight: 500; font-size: 15px; color: var(--text-primary); }
+.fullscreen-queue .queue-item .details .artist { font-size: 13px; color: var(--text-secondary); }
+.fullscreen-queue .queue-item.now-playing .details .title { color: var(--accent-red); }
+
+/* Custom Scrollbar for Queue */
+.fullscreen-queue .queue-list::-webkit-scrollbar { width: 6px; }
+.fullscreen-queue .queue-list::-webkit-scrollbar-track { background: transparent; }
+.fullscreen-queue .queue-list::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.2); border-radius: 3px; }
+.fullscreen-queue .queue-list::-webkit-scrollbar-thumb:hover { background-color: rgba(255, 255, 255, 0.4); }
+
+/* Sidebar Controls */
+.sidebar-controls { flex-shrink: 0; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; }
+.sidebar-controls .control-btn-wrapper { width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; background: rgba(255, 255, 255, 0.08); margin: 0 10px; transition: background .2s ease; cursor: pointer; }
+.sidebar-controls .control-btn-wrapper:hover { background: rgba(255, 255, 255, 0.15); }
+.sidebar-controls .control-btn { fill: var(--text-secondary); }
+.sidebar-controls .control-btn-wrapper.active .control-btn { fill: var(--accent-red); }
+.sidebar-controls .volume-control { display: flex; align-items: center; margin: 0 10px; }
+.sidebar-controls .volume-slider { width: 100px; }
+
+/* Fullscreen Main Content Area */
+.fullscreen-main-content { width: 70%; height: 100%; display: flex; justify-content: center; align-items: center; position: relative; padding: 20px; overflow: hidden; }
+.content-wrapper { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.fullscreen-main-content .minimize-btn { position: absolute; top: 30px; right: 30px; cursor: pointer; fill: var(--text-secondary); transition: all 0.2s ease; z-index: 3;}
+.fullscreen-main-content .minimize-btn:hover { fill: var(--text-primary); transform: scale(1.2); }
+.fullscreen-main-content .cover-art { width: 300px; height: 300px; object-fit: cover; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 30px; flex-shrink: 0; }
+.fullscreen-main-content .track-details { text-align: center; margin-bottom: 20px; flex-shrink: 0; }
+.fullscreen-main-content .track-title { font-size: 28px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+.fullscreen-main-content .track-artist { font-size: 18px; color: var(--text-secondary); }
+        
+/* Fullscreen Seek Bar & Main Controls */
+.fullscreen-controls-wrapper { width: 100%; max-width: 600px; flex-shrink: 0; }
+.fullscreen-controls-wrapper .progress-bar-wrapper { display: flex; align-items: center; width: 100%; position: relative; }
+.fullscreen-controls-wrapper .time { font-size: 14px; color: var(--text-secondary); min-width: 45px; text-align: center; }
+.fullscreen-controls-wrapper .progress-bar { flex-grow: 1; height: 6px; background-color: rgba(255, 255, 255, 0.2); border-radius: 3px; margin: 0 15px; cursor: pointer; position: relative; }
+.fullscreen-controls-wrapper .progress-bar-inner { width: 0%; height: 100%; background-color: var(--accent-red); border-radius: 3px; }
+.fullscreen-main-controls { display: flex; justify-content: center; align-items: center; margin-top: 20px; }
+        
+/* Fullscreen Main Controls Buttons */
+.fullscreen-main-controls .fs-btn-wrapper { width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center; background: rgba(255, 255, 255, 0.08); margin: 0 15px; transition: background .2s ease, transform .2s ease; cursor: pointer; }
+.fullscreen-main-controls .fs-btn-wrapper:hover { background: rgba(255, 255, 255, 0.15); }
+.fullscreen-main-controls .control-btn { fill: var(--text-primary); margin: 0; }
+
+/* Particle Visualizer Canvas */
+#particle-visualizer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}

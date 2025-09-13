@@ -1,11 +1,33 @@
 /**
- * SumpView Main JS
+ * Main JavaScript file for the SumpView theme.
  *
- * This file is for general theme-wide animations and interactivity.
- * GSAP is available to use here.
+ * Handles theme-wide interactions.
  */
+
 document.addEventListener('DOMContentLoaded', () => {
-    // console.log('SumpView Main JS Loaded');
-    // Example GSAP animation:
-    // gsap.from('h1', { duration: 1, y: -50, opacity: 0, ease: 'bounce' });
+
+    // Initialize the global player object.
+    // The player class is defined in player.js
+    const sumpPlayer = new SumpPlayer();
+
+    // Find all buttons with the class 'play-release-btn'
+    const playButtons = document.querySelectorAll('.play-release-btn');
+
+    // Add a click event listener to each button
+    playButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Get the release ID from the button's data attribute
+            const releaseId = button.dataset.releaseId;
+            
+            if (releaseId && typeof sumpPlayer !== 'undefined') {
+                // Call the player's method to load and play the playlist
+                sumpPlayer.loadPlaylistById(releaseId);
+            }
+        });
+    });
+
+    // You can add other theme-wide JavaScript logic here in the future.
+    // For example, handling the opening/closing of the main menu.
+
 });
+
