@@ -38,15 +38,16 @@ class SumpPlayer {
      */
     async loadPlaylistById(releaseId) {
         // Use the localized data from functions.php
-        const apiUrl = sumpViewApiSettings.apiUrl;
+        const apiUrlBase = sumpViewApiSettings.apiUrl; // This is the base, e.g., "http://yoursite.com/wp-json/"
         const nonce = sumpViewApiSettings.nonce;
 
-        if (!apiUrl || !releaseId) {
+        if (!apiUrlBase || !releaseId) {
             console.error('API URL or Release ID is missing.');
             return;
         }
 
-        const endpoint = `${apiUrl}sumpcore/v1/release/${releaseId}`;
+        // Correctly construct the final endpoint URL
+        const endpoint = `${apiUrlBase}release/${releaseId}`;
 
         try {
             const response = await fetch(endpoint, {
@@ -121,6 +122,7 @@ class SumpPlayer {
     togglePlayPause() { if (this.sound && this.sound.playing()) { this.pause(); } else { this.play(); } }
 
     next() {
+        if (!this.playlist) return;
         let nextIndex = this.trackIndex + 1;
         if (nextIndex >= this.playlist.tracks.length) {
             if (this.loop === 'all') {
@@ -134,6 +136,7 @@ class SumpPlayer {
     }
 
     prev() {
+        if (!this.playlist) return;
         let prevIndex = this.trackIndex - 1;
         if (prevIndex < 0) {
             prevIndex = this.playlist.tracks.length - 1;
@@ -214,12 +217,11 @@ class SumpPlayer {
 
     // --- Seek & Progress Bar Logic ---
     _handleSeek(event, progressBarElement) {
+        if (!this.sound || this.sound.state() !== 'loaded') return;
         const bounds = progressBarElement.getBoundingClientRect();
         const percent = Math.min(Math.max(0, (event.clientX - bounds.left) / bounds.width), 1);
-        if (this.sound && this.sound.state() === 'loaded') {
-            this.sound.seek(this.sound.duration() * percent);
-            this._step(); // Update UI immediately
-        }
+        this.sound.seek(this.sound.duration() * percent);
+        this._step(); // Update UI immediately
     }
 
     _step() {
@@ -233,7 +235,7 @@ class SumpPlayer {
             this.dom.fsProgress.style.width = percent;
             this._drawParticles(seek);
         }
-        if (this.sound.playing()) {
+        if (this.sound && this.sound.playing()) {
             this.raf = requestAnimationFrame(this._step.bind(this));
         }
     }

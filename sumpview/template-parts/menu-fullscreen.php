@@ -4,17 +4,28 @@
  *
  * @package SumpView
  */
-
 ?>
-<div id="fullscreen-menu" class="fullscreen-menu-overlay">
-    <button id="fullscreen-menu-close" class="menu-close-btn">&times;</button>
+
+<div id="fullscreen-menu-overlay" class="fullscreen-menu-overlay">
+    <button id="fullscreen-menu-close" class="menu-close-btn">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
     <nav class="fullscreen-nav">
         <?php
         wp_nav_menu( array(
             'theme_location' => 'primary',
             'container'      => false,
             'menu_class'     => 'fullscreen-menu-items',
-            'fallback_cb'    => false, // Do not show anything if menu is not set
+            'fallback_cb'    => function() {
+                echo '<ul class="fullscreen-menu-items">';
+                echo '<li><a href="' . esc_url( home_url( '/' ) ) . '">Home</a></li>';
+                echo '<li><a href="#">Artists</a></li>';
+                echo '<li><a href="#">Releases</a></li>';
+                echo '<li><a href="#">Contact</a></li>';
+                echo '</ul>';
+            },
         ) );
         ?>
     </nav>

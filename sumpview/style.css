@@ -19,6 +19,7 @@ Text Domain: sumpview
 4.0 Fullscreen Overlay & Layout
 5.0 Fullscreen Content (Queue, Main Area)
 6.0 Utility Styles
+7.0 Header & Navigation
 --------------------------------------------------------------*/
 
 /*--------------------------------------------------------------
@@ -191,4 +192,250 @@ body {
     height: 100%;
     pointer-events: none;
     z-index: 1;
+}
+/*--------------------------------------------------------------
+6.0 Utility & Widget Styles
+--------------------------------------------------------------*/
+
+/* Elementor Release Widget Grid */
+.sump-release-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+    padding: 20px;
+}
+
+.sump-release-item {
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.release-thumbnail {
+    position: relative;
+    cursor: pointer;
+}
+
+.release-thumbnail img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.sump-release-item:hover .release-thumbnail img {
+    transform: scale(1.1);
+}
+
+.release-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(20, 24, 43, 0.7); /* var(--primary-bg) with opacity */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.sump-release-item:hover .release-overlay {
+    opacity: 1;
+}
+
+.play-release-btn {
+    background: none;
+    border: 2px solid var(--text-primary);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transform: scale(0.8);
+    opacity: 0;
+    transition: all 0.4s ease;
+}
+
+.sump-release-item:hover .play-release-btn {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.play-release-btn svg {
+    fill: var(--text-primary);
+    width: 24px;
+    height: 24px;
+    margin-left: 4px; /* Optical alignment */
+}
+
+.play-release-btn:hover {
+    background-color: var(--accent-red);
+    border-color: var(--accent-red);
+}
+
+.release-title {
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.release-title a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.release-title a:hover {
+    color: var(--accent-red);
+}
+
+/*--------------------------------------------------------------
+7.0 Header & Navigation
+--------------------------------------------------------------*/
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 900;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+}
+
+/* Optional: Add a background to the header when scrolling */
+body.scrolled .site-header {
+    background-color: var(--primary-bg);
+}
+
+.site-branding .site-title {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.menu-toggle, .menu-close-btn {
+    background: transparent;
+    border: 0;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.hamburger-box {
+    width: 30px;
+    height: 24px;
+    display: inline-block;
+    position: relative;
+}
+
+.hamburger-inner {
+    display: block;
+    top: 50%;
+    margin-top: -1px;
+    width: 30px;
+    height: 2px;
+    background-color: var(--text-primary);
+    border-radius: 2px;
+    position: absolute;
+    transition: transform 0.22s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
+.hamburger-inner::before,
+.hamburger-inner::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: var(--text-primary);
+    border-radius: 2px;
+    position: absolute;
+    transition: transform 0.22s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
+.hamburger-inner::before {
+    transform: translateY(-10px);
+}
+
+.hamburger-inner::after {
+    transform: translateY(10px);
+}
+
+
+/* Fullscreen Menu Overlay */
+.fullscreen-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary-bg);
+    z-index: 990;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.fullscreen-menu-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Prevent scrolling when menu is open */
+body.menu-open {
+    overflow: hidden;
+}
+
+.menu-close-btn {
+    position: absolute;
+    top: 25px;
+    right: 35px;
+    z-index: 1000;
+}
+
+.menu-close-btn .hamburger-inner {
+    transform: rotate(225deg);
+}
+.menu-close-btn .hamburger-inner::before {
+    transform: rotate(90deg) translateX(-10px);
+    opacity: 0;
+}
+.menu-close-btn .hamburger-inner::after {
+    transform: rotate(90deg) translateX(10px);
+}
+
+.fullscreen-nav .fullscreen-menu-items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.fullscreen-nav .fullscreen-menu-items li {
+    margin: 20px 0;
+}
+
+.fullscreen-nav .fullscreen-menu-items a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 3vw;
+    font-weight: 700;
+    padding: 10px;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.fullscreen-nav .fullscreen-menu-items a:hover {
+    color: var(--accent-red);
 }
