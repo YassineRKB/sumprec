@@ -1,16 +1,14 @@
 /**
  * Main JavaScript file for the SumpView theme.
  *
- * Handles theme-wide interactions.
+ * Handles theme-wide interactions, player initialization, and animations.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- Player Initialization ---
-    // This assumes the SumpPlayer class is globally available from player.js
     const sumpPlayer = new SumpPlayer();
 
-    // Attach event listeners to all play buttons on the page
     document.body.addEventListener('click', function(event) {
         const playButton = event.target.closest('.play-release-btn');
         if (playButton) {
@@ -43,4 +41,37 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // --- GSAP Animations ---
+    // This function will animate elements as they enter the viewport
+    function initAnimations() {
+        // Animate grid items (like releases and artists)
+        const gridItems = document.querySelectorAll('.sump-release-item, .sump-artist-item');
+        if (gridItems.length > 0) {
+            gsap.from(gridItems, {
+                duration: 0.8,
+                opacity: 0,
+                y: 50, // Start 50px down
+                stagger: 0.2, // Animate one after the other
+                ease: 'power3.out'
+            });
+        }
+        
+        // Animate single page titles
+        const singleTitle = document.querySelector('.sump-single-release .entry-title, .sump-single-artist .entry-title');
+         if (singleTitle) {
+            gsap.from(singleTitle, {
+                duration: 1,
+                opacity: 0,
+                y: 30,
+                ease: 'power3.out',
+                delay: 0.2
+            });
+        }
+    }
+
+    // Run the animations
+    initAnimations();
+
 });
+
