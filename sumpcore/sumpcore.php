@@ -3,7 +3,7 @@
  * Plugin Name:       SumpCore
  * Plugin URI:        https://arcraven.com/label-solutions/heavenBeats/v1/
  * Description:       Core functionality plugin for SumpView theme. Manages artists, releases, tracks, and the audio player API.
- * Version:           1.0.1
+ * Version:           1.0.2
  * Author:            ARCRAVEN
  * Author URI:        https://arcraven.com/
  * License:           GPL v2 or later
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class SumpCore {
 
-    public $version = '1.0.1';
+    public $version = '1.0.2';
     protected static $_instance = null;
 
     public static function instance() {
@@ -49,13 +49,32 @@ final class SumpCore {
 
     private function init_hooks() {
         add_action( 'plugins_loaded', array( $this, 'init' ) );
+        add_action( 'admin_menu', array( $this, 'create_admin_menu' ) );
     }
+
+    /**
+     * Create the main parent admin menu item.
+     */
+    public function create_admin_menu() {
+        add_menu_page(
+            'HeavenBeats',
+            'HeavenBeats',
+            'manage_options',
+            'heavenbeats_dashboard',
+            function() {
+                echo '<div class="wrap"><h1>HeavenBeats Dashboard</h1><p>Welcome to your custom music management dashboard.</p></div>';
+            },
+            'dashicons-album',
+            3
+        );
+    }
+
 
     public function init() {
         new SumpCore_CPTs();
         new SumpCore_API();
         new SumpCore_ACF();
-        SumpCore_Elementor::instance(); // Elementor loader is a singleton
+        SumpCore_Elementor::instance();
     }
 }
 
@@ -69,3 +88,4 @@ $GLOBALS['sumpcore'] = SumpCore();
 if ( file_exists( SUMPCORE_PLUGIN_PATH . 'sump-dev-tools/load.php' ) ) {
     require_once SUMPCORE_PLUGIN_PATH . 'sump-dev-tools/load.php';
 }
+

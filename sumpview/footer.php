@@ -2,26 +2,19 @@
 /**
  * The template for displaying the footer
  *
- * Contains the closing of the #content div and all content after.
+ * Contains the closing of the main content area and all content after.
  *
  * @package SumpView
  */
 
 ?>
-    </div><!-- #content -->
+    </div><!-- #content.main-content-area -->
 
-    <footer id="colophon" class="site-footer">
-        <!-- Any standard footer content like copyright notices can go here in the future. -->
-    </footer><!-- #colophon -->
-
-</div><!-- #page -->
+</div><!-- #page.site -->
 
 <?php
-// Load the persistent audio player from its own template part file.
-// This keeps the footer clean and the player's code modular.
+// The persistent audio player and the fullscreen menu overlay are included here.
 get_template_part( 'template-parts/player' );
-
-// Load the fullscreen menu from its own template part file.
 get_template_part( 'template-parts/menu-fullscreen' );
 ?>
 

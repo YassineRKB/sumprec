@@ -63,8 +63,7 @@ class SumpCore_CPTs {
             'hierarchical'          => false,
             'public'                => true,
             'show_ui'               => true,
-            'show_in_menu'          => true,
-            'menu_position'         => 5,
+            'show_in_menu'          => 'heavenbeats_dashboard', // Changed from true
             'menu_icon'             => 'dashicons-admin-users',
             'show_in_admin_bar'     => true,
             'show_in_nav_menus'     => true,
@@ -108,8 +107,7 @@ class SumpCore_CPTs {
             'hierarchical'          => false,
             'public'                => true,
             'show_ui'               => true,
-            'show_in_menu'          => true,
-            'menu_position'         => 6,
+            'show_in_menu'          => 'heavenbeats_dashboard', // Changed from true
             'menu_icon'             => 'dashicons-album',
             'show_in_admin_bar'     => true,
             'show_in_nav_menus'     => true,
@@ -153,8 +151,7 @@ class SumpCore_CPTs {
             'hierarchical'          => false,
             'public'                => true,
             'show_ui'               => true,
-            'show_in_menu'          => true,
-            'menu_position'         => 7,
+            'show_in_menu'          => 'heavenbeats_dashboard', // Changed from true
             'menu_icon'             => 'dashicons-media-audio',
             'show_in_admin_bar'     => true,
             'show_in_nav_menus'     => true,
@@ -168,3 +165,4 @@ class SumpCore_CPTs {
         register_post_type( 'track', $args );
     }
 }
+

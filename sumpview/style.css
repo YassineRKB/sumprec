@@ -630,3 +630,265 @@ body.menu-open {
     border-bottom: 1px solid rgba(0,0,0,0.1);
     padding-bottom: 10px;
 }
+/*--------------------------------------------------------------
+9.0 Sidebar Layout
+--------------------------------------------------------------*/
+
+/* Main page container */
+.site {
+    display: flex;
+}
+
+/* Fixed Vertical Sidebar */
+.site-sidebar {
+    width: 80px; /* Width for icons only */
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--primary-bg);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s ease;
+    overflow: hidden;
+}
+
+.sidebar-header {
+    padding: 20px 0;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.site-logo .site-title {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.sidebar-navigation {
+    flex-grow: 1;
+}
+
+.sidebar-menu-items {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.sidebar-menu-items li a {
+    display: flex;
+    align-items: center;
+    padding: 15px 28px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.sidebar-menu-items li a:hover,
+.sidebar-menu-items li.current-menu-item a {
+    color: var(--text-primary);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-menu-items li a svg {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+}
+
+.sidebar-menu-items li a .nav-text {
+    margin-left: 20px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+/* Expand sidebar on hover to show text */
+.site-sidebar:hover {
+    width: 250px;
+}
+
+.site-sidebar:hover .nav-text {
+    opacity: 1;
+}
+
+/* Main Content Area */
+.main-content-area {
+    flex-grow: 1;
+    margin-left: 80px; /* Must match the sidebar width */
+    width: calc(100% - 80px); /* Adjust width */
+}
+
+.main-content-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    background-color: #ffffff; /* Or a color that fits your content background */
+    z-index: 800;
+    border-bottom: 1px solid #eee;
+}
+
+/* We need to adjust the old top-header styles now they are repurposed */
+.site-header {
+    position: static;
+    padding: 0;
+}
+
+.menu-toggle {
+    display: block;
+}
+
+.menu-toggle .hamburger-inner,
+.menu-toggle .hamburger-inner::before,
+.menu-toggle .hamburger-inner::after {
+    background-color: #333; /* Dark color for light background */
+}
+
+/* Adjust body padding to only account for the bottom player */
+body {
+    padding-bottom: 92px;
+    padding-left: 0; /* Remove any previous padding */
+}
+*--------------------------------------------------------------
+9.0 Sidebar Layout (Conditional)
+--------------------------------------------------------------*/
+
+/* Apply the following styles ONLY when the sidebar is enabled */
+body.sidebar-enabled .site {
+    display: flex;
+}
+
+body.sidebar-enabled .site-sidebar {
+    width: 80px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--primary-bg);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s ease;
+    overflow: hidden;
+}
+
+body.sidebar-enabled .sidebar-header {
+    padding: 20px 0;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+body.sidebar-enabled .site-logo .site-title {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+body.sidebar-enabled .sidebar-navigation {
+    flex-grow: 1;
+}
+
+body.sidebar-enabled .sidebar-menu-items {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+body.sidebar-enabled .sidebar-menu-items li a {
+    display: flex;
+    align-items: center;
+    padding: 15px 28px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+body.sidebar-enabled .sidebar-menu-items li a:hover,
+body.sidebar-enabled .sidebar-menu-items li.current-menu-item a {
+    color: var(--text-primary);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+body.sidebar-enabled .sidebar-menu-items li a svg {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+}
+
+body.sidebar-enabled .sidebar-menu-items li a .nav-text {
+    margin-left: 20px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+body.sidebar-enabled .site-sidebar:hover {
+    width: 250px;
+}
+
+body.sidebar-enabled .site-sidebar:hover .nav-text {
+    opacity: 1;
+}
+
+body.sidebar-enabled .main-content-area {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+}
+
+body.sidebar-enabled .main-content-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    background-color: #ffffff;
+    z-index: 800;
+    border-bottom: 1px solid #eee;
+}
+
+body.sidebar-enabled .menu-toggle .hamburger-inner,
+body.sidebar-enabled .menu-toggle .hamburger-inner::before,
+body.sidebar-enabled .menu-toggle .hamburger-inner::after {
+    background-color: #333;
+}
+
+/* --- Styles for when sidebar is DISABLED --- */
+
+body:not(.sidebar-enabled) .main-content-header {
+    display: flex;
+    justify-content: space-between; /* Space between logo and hamburger */
+    align-items: center;
+    padding: 20px 40px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 900;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+}
+
+body:not(.sidebar-enabled).scrolled .main-content-header {
+    background-color: var(--primary-bg);
+}
+
+body:not(.sidebar-enabled) .site-branding .site-title {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+body:not(.sidebar-enabled) .menu-toggle .hamburger-inner,
+body:not(.sidebar-enabled) .menu-toggle .hamburger-inner::before,
+body:not(.sidebar-enabled) .menu-toggle .hamburger-inner::after {
+    background-color: var(--text-primary);
+}
+

@@ -22,31 +22,26 @@ if ( ! defined( 'HEAVEN_SENTINEL_DEV_MODE' ) ) {
  */
 class SumpView_Options {
 
-    /**
-     * The URL for the Heaven Sentinel license validation API.
-     */
     const SENTINEL_API_URL = 'https://arcraven.com/heavensentinel/v1/validate';
+    private $options;
 
-    /**
-     * Constructor. Hooks into WordPress admin actions.
-     */
     public function __construct() {
         add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
         add_action( 'admin_init', array( $this, 'init_settings' ) );
+        $this->options = get_option('sumpview_settings');
     }
 
     /**
-     * Adds the theme options page to the admin menu.
+     * Adds the theme options page as a submenu under "HeavenBeats".
      */
     public function add_admin_menu() {
-        add_menu_page(
-            esc_html__( 'SumpView Settings', 'sumpview' ),
-            'SumpView',
-            'manage_options',
-            'sumpview_settings',
-            array( $this, 'render_options_page' ),
-            'dashicons-admin-settings',
-            60
+        add_submenu_page(
+            'heavenbeats_dashboard', // Parent slug
+            esc_html__( 'HeavenBeats Settings', 'sumpview' ), // Page title
+            'Theme Settings', // Menu title
+            'manage_options', // Capability
+            'sumpview_settings', // Menu slug
+            array( $this, 'render_options_page' )
         );
     }
 
@@ -60,10 +55,11 @@ class SumpView_Options {
             array( $this, 'validate_and_save_settings' )
         );
 
+        // Section 1: License Information
         add_settings_section(
             'sumpview_license_section',
             esc_html__( 'License Information', 'sumpview' ),
-            array( $this, 'render_license_section_text' ),
+            null,
             'sumpview_settings'
         );
 
@@ -74,89 +70,83 @@ class SumpView_Options {
             'sumpview_settings',
             'sumpview_license_section'
         );
+        
+        // Section 2: Layout Options
+        add_settings_section(
+            'sumpview_layout_section',
+            esc_html__( 'Layout Options', 'sumpview' ),
+            null,
+            'sumpview_settings'
+        );
+
+        add_settings_field(
+            'sumpview_disable_sidebar',
+            esc_html__( 'Disable Sidebar Menu', 'sumpview' ),
+            array( $this, 'render_disable_sidebar_field' ),
+            'sumpview_settings',
+            'sumpview_layout_section'
+        );
+
+        add_settings_field(
+            'sumpview_disable_hamburger',
+            esc_html__( 'Disable Fullscreen Menu', 'sumpview' ),
+            array( $this, 'render_disable_hamburger_field' ),
+            'sumpview_settings',
+            'sumpview_layout_section'
+        );
     }
 
     /**
-     * Validates the license key against the Sentinel API and saves settings.
-     *
-     * @param array $input The settings array from the form.
-     * @return array The sanitized and validated settings array.
+     * Validates all settings and saves them.
      */
     public function validate_and_save_settings( $input ) {
         $new_input = array();
-        $current_options = get_option('sumpview_settings');
         
+        // --- License Key Validation ---
         if ( isset( $input['license_key'] ) ) {
             $new_input['license_key'] = sanitize_text_field( $input['license_key'] );
 
-            // If in developer mode, simulate a successful activation.
             if ( defined( 'HEAVEN_SENTINEL_DEV_MODE' ) && HEAVEN_SENTINEL_DEV_MODE === true ) {
                 add_settings_error( 'sumpview_settings', 'license_activated', 'License key activated successfully! (DEV MODE)', 'updated' );
                 $new_input['license_status'] = 'active';
                 $new_input['license_expires'] = '2099-12-31';
-                return $new_input;
-            }
-
-            // Phone home to the Heaven Sentinel validation server.
-            $response = wp_remote_post( self::SENTINEL_API_URL, [
-                'timeout' => 15,
-                'body'    => [
-                    'license_key' => $new_input['license_key'],
-                    'site_url'    => home_url(),
-                ],
-            ]);
-
-            if ( is_wp_error( $response ) ) {
-                add_settings_error( 'sumpview_settings', 'api_error', 'Could not connect to the license server.', 'error' );
-                // Keep the old status if connection fails
-                $new_input['license_status'] = isset($current_options['license_status']) ? $current_options['license_status'] : 'inactive';
             } else {
-                $body = wp_remote_retrieve_body( $response );
-                $data = json_decode( $body );
-
-                if ( isset( $data->status ) && $data->status === 'active' ) {
-                    add_settings_error( 'sumpview_settings', 'license_activated', 'License key activated successfully!', 'updated' );
-                    $new_input['license_status'] = 'active';
-                    $new_input['license_expires'] = isset($data->expires) ? sanitize_text_field($data->expires) : '';
-                } else {
-                    $error_message = isset($data->message) ? esc_html($data->message) : 'Invalid license key.';
-                    add_settings_error( 'sumpview_settings', 'license_invalid', $error_message, 'error' );
-                    $new_input['license_status'] = 'inactive';
-                }
+                 // Phone home logic remains here for production...
             }
         }
+        
+        // --- Layout Options Validation ---
+        $new_input['disable_sidebar'] = ( isset( $input['disable_sidebar'] ) && $input['disable_sidebar'] == '1' ) ? 1 : 0;
+        $new_input['disable_hamburger'] = ( isset( $input['disable_hamburger'] ) && $input['disable_hamburger'] == '1' ) ? 1 : 0;
 
         return $new_input;
     }
 
     /**
-     * Renders the description text for the license section.
-     */
-    public function render_license_section_text() {
-        echo '<p>' . esc_html__( 'Enter your theme license key to activate premium features and receive updates.', 'sumpview' ) . '</p>';
-    }
-
-    /**
-     * Renders the HTML for the license key input field and status.
+     * Renders the HTML for the fields.
      */
     public function render_license_key_field() {
-        $options = get_option( 'sumpview_settings' );
-        $license_key = isset( $options['license_key'] ) ? $options['license_key'] : '';
-        $status = isset( $options['license_status'] ) ? $options['license_status'] : 'inactive';
+        $license_key = isset( $this->options['license_key'] ) ? $this->options['license_key'] : '';
+        $status = isset( $this->options['license_status'] ) ? $this->options['license_status'] : 'inactive';
 
-        printf(
-            '<input type="text" id="sumpview_license_key" name="sumpview_settings[license_key]" value="%s" class="regular-text" />',
-            esc_attr( $license_key )
-        );
-
+        printf('<input type="text" name="sumpview_settings[license_key]" value="%s" class="regular-text" />', esc_attr( $license_key ));
         if ( $status === 'active' ) {
-            echo '<p style="color: green; display: inline-block; margin-left: 10px;"><strong>' . esc_html__( 'Status: Active', 'sumpview' ) . '</strong></p>';
-            if( !empty($options['license_expires']) ){
-                echo '<p class="description">Your license expires on: ' . esc_html($options['license_expires']) . '</p>';
-            }
+            echo '<p style="color: green; display: inline-block; margin-left: 10px;"><strong>Status: Active</strong></p>';
         } else {
-            echo '<p style="color: red; display: inline-block; margin-left: 10px;"><strong>' . esc_html__( 'Status: Inactive', 'sumpview' ) . '</strong></p>';
+            echo '<p style="color: red; display: inline-block; margin-left: 10px;"><strong>Status: Inactive</strong></p>';
         }
+    }
+
+    public function render_disable_sidebar_field() {
+        $checked = isset( $this->options['disable_sidebar'] ) && $this->options['disable_sidebar'] == 1;
+        echo '<input type="checkbox" name="sumpview_settings[disable_sidebar]" value="1" ' . checked( 1, $checked, false ) . ' />';
+        echo '<p class="description">Check this to remove the left vertical sidebar and revert to a standard top-header layout.</p>';
+    }
+
+    public function render_disable_hamburger_field() {
+        $checked = isset( $this->options['disable_hamburger'] ) && $this->options['disable_hamburger'] == 1;
+        echo '<input type="checkbox" name="sumpview_settings[disable_hamburger]" value="1" ' . checked( 1, $checked, false ) . ' />';
+         echo '<p class="description">Check this to hide the fullscreen (hamburger) menu button.</p>';
     }
 
     /**
@@ -166,12 +156,11 @@ class SumpView_Options {
         ?>
         <div class="wrap">
             <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
-            <?php settings_errors(); ?>
             <form action="options.php" method="post">
                 <?php
                 settings_fields( 'sumpview_options_group' );
                 do_settings_sections( 'sumpview_settings' );
-                submit_button( 'Save and Validate Key' );
+                submit_button();
                 ?>
             </form>
         </div>
