@@ -43,7 +43,7 @@ class SumpPlayer {
 
         if (!apiUrlBase || !releaseId) {
             console.error('API URL or Release ID is missing.');
-            return;
+            return Promise.reject('API URL or Release ID is missing.');
         }
 
         // Correctly construct the final endpoint URL
@@ -63,9 +63,11 @@ class SumpPlayer {
             const data = await response.json();
             this.playlist = data;
             this.loadTrack(0, true); // Load the first track and autoplay
+            return Promise.resolve(data);
 
         } catch (error) {
             console.error('Failed to fetch playlist:', error);
+            return Promise.reject(error);
         }
     }
 

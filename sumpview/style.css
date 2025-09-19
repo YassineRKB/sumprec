@@ -210,11 +210,20 @@ body {
     position: relative;
     overflow: hidden;
     border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sump-release-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .release-thumbnail {
     position: relative;
     cursor: pointer;
+    overflow: hidden;
 }
 
 .release-thumbnail img {
@@ -282,6 +291,7 @@ body {
     margin-top: 15px;
     font-size: 16px;
     font-weight: 500;
+    padding: 0 15px 15px;
 }
 
 .release-title a {
@@ -294,6 +304,332 @@ body {
     color: var(--accent-red);
 }
 
+/* Elementor Artist Widget Grid */
+.sump-artist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 25px;
+    padding: 20px;
+}
+
+.sump-artist-item {
+    text-align: center;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.sump-artist-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.artist-thumbnail {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1;
+}
+
+.artist-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.sump-artist-item:hover .artist-thumbnail img {
+    transform: scale(1.05);
+}
+
+.artist-title {
+    padding: 20px 15px;
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.artist-title a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.artist-title a:hover {
+    color: var(--accent-red);
+}
+
+/* Elementor Track Widget */
+.sump-track-widget {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid var(--accent-red);
+}
+
+.track-title {
+    margin: 0 0 10px 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+}
+
+.track-artist {
+    margin-bottom: 8px;
+    color: #666;
+    font-style: italic;
+}
+
+.track-artist a {
+    color: var(--accent-red);
+    text-decoration: none;
+}
+
+.track-artist a:hover {
+    text-decoration: underline;
+}
+
+.track-release {
+    font-size: 14px;
+    color: #888;
+}
+
+.track-release a {
+    color: var(--accent-red);
+    text-decoration: none;
+}
+
+.track-release a:hover {
+    text-decoration: underline;
+}
+
+/* Track Archive Grid */
+.tracks-archive-header {
+    text-align: center;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, var(--primary-bg) 0%, #1a1f3a 100%);
+    color: var(--text-primary);
+}
+
+.tracks-archive-header h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.play-all-btn {
+    background: var(--accent-red);
+    color: var(--text-primary);
+    border: none;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.play-all-btn:hover {
+    background: #a60000;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(199, 0, 0, 0.3);
+}
+
+.tracks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 40px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.track-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.track-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.track-card-image {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+}
+
+.track-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.track-card:hover .track-card-image img {
+    transform: scale(1.05);
+}
+
+.track-play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(20, 24, 43, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.track-card:hover .track-play-overlay {
+    opacity: 1;
+}
+
+.track-play-btn {
+    background: var(--accent-red);
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.track-play-btn:hover {
+    transform: scale(1.1);
+}
+
+.track-play-btn svg {
+    fill: var(--text-primary);
+    width: 24px;
+    height: 24px;
+    margin-left: 2px;
+}
+
+.track-card-content {
+    padding: 20px;
+}
+
+.track-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: #333;
+}
+
+.track-card-artist {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.track-card-release {
+    font-size: 12px;
+    color: #999;
+}
+
+.track-card-artist a,
+.track-card-release a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.track-card-artist a:hover,
+.track-card-release a:hover {
+    color: var(--accent-red);
+}
+
+/* Artists Archive Grid */
+.artists-archive-header {
+    text-align: center;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, var(--primary-bg) 0%, #1a1f3a 100%);
+    color: var(--text-primary);
+}
+
+.artists-archive-header h1 {
+    font-size: 48px;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.artists-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+    padding: 40px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.artist-card {
+    background: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+.artist-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+    text-decoration: none;
+    color: inherit;
+}
+
+.artist-card-image {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+}
+
+.artist-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.artist-card:hover .artist-card-image img {
+    transform: scale(1.05);
+}
+
+.artist-card-content {
+    padding: 25px 20px;
+    text-align: center;
+}
+
+.artist-card-name {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.artist-card-releases {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+}
 /*--------------------------------------------------------------
 7.0 Header & Navigation
 --------------------------------------------------------------*/
@@ -537,6 +873,13 @@ body.menu-open {
     color: var(--text-primary);
 }
 
+.release-date {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin-top: 10px;
+    font-style: italic;
+}
+
 .track-list {
     margin-top: 40px;
 }
@@ -558,6 +901,14 @@ body.menu-open {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.track-list li:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding-left: 10px;
+    margin-left: -10px;
+    margin-right: -10px;
 }
 
 .track-list li::before {
@@ -568,6 +919,25 @@ body.menu-open {
     font-size: 16px;
     min-width: 20px;
     text-align: right;
+}
+
+.track-title {
+    font-weight: 500;
+}
+
+.track-artist-info {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+.track-artist-info a {
+    color: var(--accent-red);
+    text-decoration: none;
+}
+
+.track-artist-info a:hover {
+    text-decoration: underline;
 }
 
 /* --- Single Artist Page --- */
@@ -789,6 +1159,11 @@ body.sidebar-enabled .site-logo .site-title {
     text-decoration: none;
     font-size: 20px;
     font-weight: 700;
+}
+
+body.sidebar-enabled .site-logo-image {
+    max-height: 50px;
+    width: auto;
 }
 
 body.sidebar-enabled .sidebar-navigation {

@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Player Initialization ---
     const sumpPlayer = new SumpPlayer();
+    
+    // Make player globally accessible
+    window.sumpPlayer = sumpPlayer;
 
     document.body.addEventListener('click', function(event) {
         const playButton = event.target.closest('.play-release-btn');

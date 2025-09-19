@@ -40,7 +40,15 @@ $is_hamburger_disabled = ! empty( $sumpview_options['disable_hamburger'] );
             if ( $is_sidebar_disabled ) :
             ?>
                 <div class="site-branding">
-                     <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" class="site-title">SumpView</a>
+                     <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" class="site-title">
+                        <?php
+                        $logo_url = get_theme_mod('sump_logo');
+                        if ($logo_url) : ?>
+                            <img src="<?php echo esc_url($logo_url); ?>" alt="<?php bloginfo('name'); ?>" class="site-logo-image" style="max-height: 40px;">
+                        <?php else : ?>
+                            <?php bloginfo('name'); ?>
+                        <?php endif; ?>
+                     </a>
                 </div>
             <?php endif; ?>
 

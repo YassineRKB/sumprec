@@ -21,9 +21,10 @@
             'fallback_cb'    => function() {
                 echo '<ul class="fullscreen-menu-items">';
                 echo '<li><a href="' . esc_url( home_url( '/' ) ) . '">Home</a></li>';
-                echo '<li><a href="#">Artists</a></li>';
-                echo '<li><a href="#">Releases</a></li>';
-                echo '<li><a href="#">Contact</a></li>';
+                echo '<li><a href="' . get_post_type_archive_link('artist') . '">Artists</a></li>';
+                echo '<li><a href="' . get_post_type_archive_link('release') . '">Releases</a></li>';
+                echo '<li><a href="' . get_post_type_archive_link('track') . '">Tracks</a></li>';
+                echo '<li><a href="' . get_permalink(get_option('page_for_posts')) . '">Blog</a></li>';
                 echo '</ul>';
             },
         ) );

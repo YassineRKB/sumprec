@@ -67,6 +67,46 @@ if ( is_admin() ) {
 }
 
 /**
+ * Add Customizer settings for logo
+ */
+function sumpview_customize_register( $wp_customize ) {
+    // Add a section for the logo
+    $wp_customize->add_section( 'sumpview_logo_section', array(
+        'title'    => __( 'Logo Settings', 'sumpview' ),
+        'priority' => 30,
+    ) );
+
+    // Add logo image setting
+    $wp_customize->add_setting( 'sump_logo', array(
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ) );
+
+    // Add logo image control
+    $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, 'sump_logo', array(
+        'label'    => __( 'Logo Image', 'sumpview' ),
+        'section'  => 'sumpview_logo_section',
+        'settings' => 'sump_logo',
+    ) ) );
+}
+add_action( 'customize_register', 'sumpview_customize_register' );
+
+/**
+ * Add body class for sidebar layout
+ */
+function sumpview_body_classes( $classes ) {
+    $sumpview_options = get_option('sumpview_settings');
+    $is_sidebar_disabled = ! empty( $sumpview_options['disable_sidebar'] );
+    
+    if ( ! $is_sidebar_disabled ) {
+        $classes[] = 'sidebar-enabled';
+    }
+    
+    return $classes;
+}
+add_filter( 'body_class', 'sumpview_body_classes' );
+
+/**
  * Load developer tools if they exist.
  * This should be the last thing included.
  */
