@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Make player globally accessible
     window.sumpPlayer = sumpPlayer;
 
+    // Handle play buttons for releases
     document.body.addEventListener('click', function(event) {
         const playButton = event.target.closest('.play-release-btn');
         if (playButton) {

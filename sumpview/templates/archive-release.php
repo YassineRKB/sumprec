@@ -13,25 +13,32 @@ get_header();
         <h1 class="page-title">Releases</h1>
     </header>
 
-    <div class="release-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; padding: 20px;">
+    <div class="sump-release-grid" style="padding: 20px;">
         <?php
         if ( have_posts() ) :
             while ( have_posts() ) :
                 the_post();
                 ?>
-                <article id="post-<?php the_ID(); ?>" <?php post_class(); ?> style="text-align: center;">
-                    <a href="<?php the_permalink(); ?>">
-                        <?php if ( has_post_thumbnail() ) : ?>
-                            <?php the_post_thumbnail('medium'); ?>
-                        <?php endif; ?>
-                        <h2 class="entry-title"><?php the_title(); ?></h2>
-                    </a>
-                    
-                    <!-- The button that triggers the player -->
-                    <button class="play-release-btn" data-release-id="<?php echo get_the_ID(); ?>">
-                        Play Album
-                    </button>
-                </article>
+                <div class="sump-release-item">
+                    <div class="release-thumbnail">
+                        <a href="<?php the_permalink(); ?>">
+                            <?php if ( has_post_thumbnail() ) : ?>
+                                <?php the_post_thumbnail('medium_large'); ?>
+                            <?php endif; ?>
+                        </a>
+                        <div class="release-overlay">
+                            <button class="play-release-btn" data-release-id="<?php echo get_the_ID(); ?>">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48">
+                                    <path fill="none" d="M0 0h24v24H0z"/>
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <h3 class="release-title">
+                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                    </h3>
+                </div>
                 <?php
             endwhile;
         else :
@@ -39,6 +46,15 @@ get_header();
         endif;
         ?>
     </div>
+
+    <?php
+    // Pagination
+    the_posts_pagination(array(
+        'mid_size' => 2,
+        'prev_text' => '← Previous',
+        'next_text' => 'Next →',
+    ));
+    ?>
 
 </main><!-- #main -->
 

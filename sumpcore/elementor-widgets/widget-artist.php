@@ -111,6 +111,10 @@ class SumpCore_Artist_Widget extends \Elementor\Widget_Base {
                             <div class="artist-thumbnail">
                                 <?php the_post_thumbnail('medium_large'); ?>
                             </div>
+                        <?php else : ?>
+                            <div class="artist-thumbnail">
+                                <img src="https://placehold.co/300x300/14182b/ffffff?text=<?php echo urlencode(get_the_title()); ?>" alt="<?php the_title(); ?>">
+                            </div>
                         <?php endif; ?>
                         <h3 class="artist-title"><?php the_title(); ?></h3>
                     </a>

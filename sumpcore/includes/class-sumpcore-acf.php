@@ -76,6 +76,9 @@ class SumpCore_ACF {
                                 'youtube' => 'YouTube',
                                 'beatport' => 'Beatport',
                                 'apple' => 'Apple Music',
+                                'bandcamp' => 'Bandcamp',
+                                'soundcloud' => 'SoundCloud',
+                                'amazon' => 'Amazon Music',
                             ),
                         ),
                         array(

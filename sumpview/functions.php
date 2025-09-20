@@ -107,6 +107,51 @@ function sumpview_body_classes( $classes ) {
 add_filter( 'body_class', 'sumpview_body_classes' );
 
 /**
+ * Add custom template redirects for our custom post types
+ */
+function sumpview_template_redirect() {
+    if ( is_singular( 'release' ) ) {
+        $template = locate_template( 'templates/single-release.php' );
+        if ( $template ) {
+            include $template;
+            exit;
+        }
+    }
+    
+    if ( is_singular( 'artist' ) ) {
+        $template = locate_template( 'templates/single-artist.php' );
+        if ( $template ) {
+            include $template;
+            exit;
+        }
+    }
+    
+    if ( is_post_type_archive( 'artist' ) ) {
+        $template = locate_template( 'templates/archive-artist.php' );
+        if ( $template ) {
+            include $template;
+            exit;
+        }
+    }
+    
+    if ( is_post_type_archive( 'track' ) ) {
+        $template = locate_template( 'templates/archive-track.php' );
+        if ( $template ) {
+            include $template;
+            exit;
+        }
+    }
+    
+    if ( is_post_type_archive( 'release' ) ) {
+        $template = locate_template( 'templates/archive-release.php' );
+        if ( $template ) {
+            include $template;
+            exit;
+        }
+    }
+}
+add_action( 'template_redirect', 'sumpview_template_redirect' );
+/**
  * Load developer tools if they exist.
  * This should be the last thing included.
  */

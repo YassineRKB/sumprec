@@ -149,9 +149,13 @@ class SumpCore_Release_Widget extends \Elementor\Widget_Base {
                 ?>
                 <div class="sump-release-item">
                     <div class="release-thumbnail">
+                        <a href="<?php the_permalink(); ?>">
                         <?php if (has_post_thumbnail()) : ?>
                             <?php the_post_thumbnail('medium_large'); ?>
+                        <?php else : ?>
+                            <img src="https://placehold.co/300x300/14182b/ffffff?text=<?php echo urlencode(get_the_title()); ?>" alt="<?php the_title(); ?>">
                         <?php endif; ?>
+                        </a>
                         <div class="release-overlay">
                             <button class="play-release-btn" data-release-id="<?php echo get_the_ID(); ?>">
                                 <!-- Simple Play SVG Icon -->
