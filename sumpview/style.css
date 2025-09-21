@@ -206,6 +206,8 @@ body {
 }
 
 .sump-release-item {
+    display: flex;
+    flex-direction: column;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -213,6 +215,7 @@ body {
     background: #fff;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%; /* Ensure all items have same height */
 }
 
 .sump-release-item:hover {
@@ -224,12 +227,15 @@ body {
     position: relative;
     cursor: pointer;
     overflow: hidden;
+    aspect-ratio: 1; /* Perfect square for all thumbnails */
+    width: 100%;
 }
 
 .release-thumbnail img {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover; /* Ensure consistent sizing */
     transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
@@ -288,16 +294,23 @@ body {
 }
 
 .release-title {
-    margin-top: 15px;
+    margin: 15px 0 0 0;
+    padding: 0 15px 15px;
     font-size: 16px;
     font-weight: 500;
-    padding: 0 15px 15px;
+    flex-grow: 1; /* Take remaining space */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px; /* Minimum height for title area */
 }
 
 .release-title a {
     color: #333;
     text-decoration: none;
     transition: color 0.2s ease;
+    display: block;
+    line-height: 1.3;
 }
 
 .release-title a:hover {
@@ -403,6 +416,393 @@ body {
 
 .track-release a:hover {
     text-decoration: underline;
+}
+
+/* Latest Release Widget */
+.sump-latest-release-widget {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    max-width: 300px;
+}
+
+.sump-latest-release-widget:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.latest-release-thumbnail {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+}
+
+.latest-release-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.sump-latest-release-widget:hover .latest-release-thumbnail img {
+    transform: scale(1.05);
+}
+
+.latest-release-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(20, 24, 43, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sump-latest-release-widget:hover .latest-release-overlay {
+    opacity: 1;
+}
+
+.latest-release-overlay .play-release-btn {
+    background: var(--accent-red);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.latest-release-overlay .play-release-btn:hover {
+    transform: scale(1.1);
+}
+
+.latest-release-overlay .play-release-btn svg {
+    fill: var(--text-primary);
+    width: 20px;
+    height: 20px;
+    margin-left: 2px;
+}
+
+.latest-release-content {
+    padding: 20px;
+    text-align: center;
+}
+
+.latest-release-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+}
+
+.latest-release-title a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.latest-release-title a:hover {
+    color: var(--accent-red);
+}
+
+.latest-release-artist {
+    font-size: 14px;
+    color: #666;
+    font-style: italic;
+}
+
+.latest-release-artist a {
+    color: var(--accent-red);
+    text-decoration: none;
+}
+
+.latest-release-artist a:hover {
+    text-decoration: underline;
+}
+
+/* Latest Track Widget */
+.sump-latest-track-widget {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    max-width: 300px;
+}
+
+.sump-latest-track-widget:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.latest-track-thumbnail {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+}
+
+.latest-track-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.sump-latest-track-widget:hover .latest-track-thumbnail img {
+    transform: scale(1.05);
+}
+
+.latest-track-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(20, 24, 43, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sump-latest-track-widget:hover .latest-track-overlay {
+    opacity: 1;
+}
+
+.latest-track-overlay .track-play-btn {
+    background: var(--accent-red);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.latest-track-overlay .track-play-btn:hover {
+    transform: scale(1.1);
+}
+
+.latest-track-overlay .track-play-btn svg {
+    fill: var(--text-primary);
+    width: 20px;
+    height: 20px;
+    margin-left: 2px;
+}
+
+.latest-track-content {
+    padding: 20px;
+    text-align: center;
+}
+
+.latest-track-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: #333;
+}
+
+.latest-track-artist {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+    font-style: italic;
+}
+
+.latest-track-release {
+    font-size: 12px;
+    color: #999;
+}
+
+.latest-track-artist a,
+.latest-track-release a {
+    color: var(--accent-red);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.latest-track-artist a:hover,
+.latest-track-release a:hover {
+    text-decoration: underline;
+}
+
+/* Tracks Grid Widget */
+.sump-tracks-grid-widget {
+    width: 100%;
+}
+
+.tracks-grid-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.play-all-tracks-btn {
+    background: var(--accent-red);
+    color: var(--text-primary);
+    border: none;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.play-all-tracks-btn:hover {
+    background: #a60000;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(199, 0, 0, 0.3);
+}
+
+.widget-tracks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.widget-track-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.widget-track-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.widget-track-image {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+}
+
+.widget-track-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.widget-track-card:hover .widget-track-image img {
+    transform: scale(1.05);
+}
+
+.widget-track-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(20, 24, 43, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.widget-track-card:hover .widget-track-overlay {
+    opacity: 1;
+}
+
+.widget-track-play-btn {
+    background: var(--accent-red);
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.widget-track-play-btn:hover {
+    transform: scale(1.1);
+}
+
+.widget-track-play-btn svg {
+    fill: var(--text-primary);
+    width: 24px;
+    height: 24px;
+    margin-left: 2px;
+}
+
+.widget-track-content {
+    padding: 20px;
+}
+
+.widget-track-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: #333;
+}
+
+.widget-track-artist {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.widget-track-release {
+    font-size: 12px;
+    color: #999;
+}
+
+.widget-track-artist a,
+.widget-track-release a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.widget-track-artist a:hover,
+.widget-track-release a:hover {
+    color: var(--accent-red);
+}
+
+.widget-tracks-pagination {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.widget-tracks-pagination .page-numbers {
+    display: inline-block;
+    padding: 10px 15px;
+    margin: 0 5px;
+    background: #f8f9fa;
+    color: #333;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+}
+
+.widget-tracks-pagination .page-numbers:hover,
+.widget-tracks-pagination .page-numbers.current {
+    background: var(--accent-red);
+    color: var(--text-primary);
 }
 
 /* Track Archive Grid */

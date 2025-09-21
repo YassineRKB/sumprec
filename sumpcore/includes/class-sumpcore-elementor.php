@@ -57,11 +57,17 @@ final class SumpCore_Elementor {
         require_once SUMPCORE_PLUGIN_PATH . 'elementor-widgets/widget-release.php';
         require_once SUMPCORE_PLUGIN_PATH . 'elementor-widgets/widget-artist.php';
         require_once SUMPCORE_PLUGIN_PATH . 'elementor-widgets/widget-track.php';
+        require_once SUMPCORE_PLUGIN_PATH . 'elementor-widgets/widget-latest-release.php';
+        require_once SUMPCORE_PLUGIN_PATH . 'elementor-widgets/widget-latest-track.php';
+        require_once SUMPCORE_PLUGIN_PATH . 'elementor-widgets/widget-tracks-grid.php';
 
         // Register the widgets
         $widgets_manager->register( new SumpCore_Release_Widget() );
         $widgets_manager->register( new SumpCore_Artist_Widget() );
         $widgets_manager->register( new SumpCore_Track_Widget() );
+        $widgets_manager->register( new SumpCore_Latest_Release_Widget() );
+        $widgets_manager->register( new SumpCore_Latest_Track_Widget() );
+        $widgets_manager->register( new SumpCore_Tracks_Grid_Widget() );
     }
 }
 

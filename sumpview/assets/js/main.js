@@ -21,6 +21,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 sumpPlayer.loadPlaylistById(releaseId);
             }
         }
+        
+        // Handle latest track widget play buttons
+        const trackPlayButton = event.target.closest('.track-play-btn');
+        if (trackPlayButton) {
+            const trackSrc = trackPlayButton.dataset.trackSrc;
+            const trackTitle = trackPlayButton.dataset.trackTitle;
+            const trackArtist = trackPlayButton.dataset.trackArtist;
+            const trackCover = trackPlayButton.dataset.trackCover;
+            
+            if (trackSrc && window.sumpPlayer) {
+                const trackData = {
+                    tracks: [{
+                        title: trackTitle,
+                        src: trackSrc
+                    }],
+                    artist: trackArtist,
+                    album: 'Single',
+                    cover: trackCover
+                };
+                window.sumpPlayer.playlist = trackData;
+                window.sumpPlayer.loadTrack(0, true);
+            }
+        }
     });
 
     // --- Fullscreen Menu Toggle Logic ---
