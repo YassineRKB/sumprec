@@ -88,7 +88,7 @@ class SumpCore_Release_Widget extends \Elementor\Widget_Base {
         $this->add_control(
 			'posts_per_page',
 			[
-				'label' => esc_html__( 'Posts Per Page', 'sumpcore' ),
+				'label' => esc_html__( 'Releases Per Page', 'sumpcore' ),
 				'type' => \Elementor\Controls_Manager::NUMBER,
 				'min' => 1,
 				'max' => 50,
@@ -100,6 +100,37 @@ class SumpCore_Release_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
+        $this->add_control(
+			'columns',
+			[
+				'label' => esc_html__( 'Columns', 'sumpcore' ),
+				'type' => \Elementor\Controls_Manager::SELECT,
+				'default' => '3',
+				'options' => [
+					'1' => '1',
+					'2' => '2',
+					'3' => '3',
+					'4' => '4',
+					'5' => '5',
+					'6' => '6',
+				],
+			]
+		);
+
+        $this->add_control(
+			'show_pagination',
+			[
+				'label' => esc_html__( 'Show Pagination', 'sumpcore' ),
+				'type' => \Elementor\Controls_Manager::SWITCHER,
+				'label_on' => esc_html__( 'Show', 'sumpcore' ),
+				'label_off' => esc_html__( 'Hide', 'sumpcore' ),
+				'return_value' => 'yes',
+				'default' => 'no',
+                'condition' => [
+                    'source' => 'latest',
+                ],
+			]
+		);
         $this->add_control(
 			'selected_releases',
 			[
@@ -127,10 +158,15 @@ class SumpCore_Release_Widget extends \Elementor\Widget_Base {
     protected function render() {
         $settings = $this->get_settings_for_display();
         $source = $settings['source'];
+        $columns = $settings['columns'];
+        $show_pagination = $settings['show_pagination'];
+        
+        $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 
         $query_args = [
             'post_type' => 'release',
             'post_status' => 'publish',
+            'paged' => $paged,
         ];
 
         if ($source === 'manual' && !empty($settings['selected_releases'])) {
@@ -143,7 +179,7 @@ class SumpCore_Release_Widget extends \Elementor\Widget_Base {
         $releases_query = new \WP_Query($query_args);
 
         if ($releases_query->have_posts()) {
-            echo '<div class="sump-release-grid">';
+            echo '<div class="sump-release-grid" style="grid-template-columns: repeat(' . $columns . ', 1fr);">';
             while ($releases_query->have_posts()) {
                 $releases_query->the_post();
                 ?>
@@ -168,6 +204,19 @@ class SumpCore_Release_Widget extends \Elementor\Widget_Base {
                 <?php
             }
             echo '</div>';
+            
+            if ($show_pagination === 'yes' && $releases_query->max_num_pages > 1) {
+                echo '<div class="sump-pagination">';
+                echo paginate_links([
+                    'total' => $releases_query->max_num_pages,
+                    'current' => $paged,
+                    'prev_text' => '← Previous',
+                    'next_text' => 'Next →',
+                    'mid_size' => 2,
+                ]);
+                echo '</div>';
+            }
+            
             \wp_reset_postdata();
         } else {
             echo '<p>' . esc_html__('No releases found.', 'sumpcore') . '</p>';

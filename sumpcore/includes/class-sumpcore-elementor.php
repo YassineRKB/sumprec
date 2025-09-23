@@ -60,6 +60,9 @@ final class SumpCore_Elementor {
         require_once SUMPCORE_PLUGIN_PATH . 'elementor-widgets/widget-latest-release.php';
         require_once SUMPCORE_PLUGIN_PATH . 'elementor-widgets/widget-latest-track.php';
         require_once SUMPCORE_PLUGIN_PATH . 'elementor-widgets/widget-tracks-grid.php';
+        require_once SUMPCORE_PLUGIN_PATH . 'elementor-widgets/widget-single-release.php';
+        require_once SUMPCORE_PLUGIN_PATH . 'elementor-widgets/widget-single-artist.php';
+        require_once SUMPCORE_PLUGIN_PATH . 'elementor-widgets/widget-tracks-archive.php';
 
         // Register the widgets
         $widgets_manager->register( new SumpCore_Release_Widget() );
@@ -68,6 +71,9 @@ final class SumpCore_Elementor {
         $widgets_manager->register( new SumpCore_Latest_Release_Widget() );
         $widgets_manager->register( new SumpCore_Latest_Track_Widget() );
         $widgets_manager->register( new SumpCore_Tracks_Grid_Widget() );
+        $widgets_manager->register( new SumpCore_Single_Release_Widget() );
+        $widgets_manager->register( new SumpCore_Single_Artist_Widget() );
+        $widgets_manager->register( new SumpCore_Tracks_Archive_Widget() );
     }
 }
 

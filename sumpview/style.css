@@ -805,6 +805,39 @@ body {
     color: var(--text-primary);
 }
 
+/* Pagination Styles */
+.sump-pagination {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.sump-pagination .page-numbers {
+    display: inline-block;
+    padding: 10px 15px;
+    margin: 0 5px;
+    background: #f8f9fa;
+    color: #333;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+}
+
+.sump-pagination .page-numbers:hover,
+.sump-pagination .page-numbers.current {
+    background: var(--accent-red);
+    color: var(--text-primary);
+}
+
+.sump-pagination .page-numbers.dots {
+    background: transparent;
+    color: #666;
+}
+
+.sump-pagination .page-numbers.dots:hover {
+    background: transparent;
+    color: #666;
+}
+
 /* Track Archive Grid */
 .tracks-archive-header {
     text-align: center;

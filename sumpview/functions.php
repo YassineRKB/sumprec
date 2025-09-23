@@ -23,6 +23,7 @@ if ( ! function_exists( 'sumpview_setup' ) ) :
 		register_nav_menus(
 			array(
 				'primary' => esc_html__( 'Primary Menu', 'sumpview' ),
+				'sidebar' => esc_html__( 'Sidebar Menu', 'sumpview' ),
 			)
 		);
 	}
@@ -107,50 +108,111 @@ function sumpview_body_classes( $classes ) {
 add_filter( 'body_class', 'sumpview_body_classes' );
 
 /**
+ * Custom Walker for Sidebar Navigation
+ */
+class SumpView_Sidebar_Walker extends Walker_Nav_Menu {
+    
+    function start_lvl( &$output, $depth = 0, $args = null ) {
+        $indent = str_repeat("\t", $depth);
+        $output .= "\n$indent<ul class=\"sub-menu\">\n";
+    }
+
+    function end_lvl( &$output, $depth = 0, $args = null ) {
+        $indent = str_repeat("\t", $depth);
+        $output .= "$indent</ul>\n";
+    }
+
+    function start_el( &$output, $item, $depth = 0, $args = null, $id = 0 ) {
+        $indent = ($depth) ? str_repeat("\t", $depth) : '';
+        
+        $classes = empty( $item->classes ) ? array() : (array) $item->classes;
+        $classes[] = 'menu-item-' . $item->ID;
+        
+        $class_names = join( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item, $args ) );
+        $class_names = $class_names ? ' class="' . esc_attr( $class_names ) . '"' : '';
+        
+        $id = apply_filters( 'nav_menu_item_id', 'menu-item-'. $item->ID, $item, $args );
+        $id = $id ? ' id="' . esc_attr( $id ) . '"' : '';
+        
+        $output .= $indent . '<li' . $id . $class_names .'>';
+        
+        $attributes  = ! empty( $item->attr_title ) ? ' title="'  . esc_attr( $item->attr_title ) .'"' : '';
+        $attributes .= ! empty( $item->target )     ? ' target="' . esc_attr( $item->target     ) .'"' : '';
+        $attributes .= ! empty( $item->xfn )        ? ' rel="'    . esc_attr( $item->xfn        ) .'"' : '';
+        $attributes .= ! empty( $item->url )        ? ' href="'   . esc_attr( $item->url        ) .'"' : '';
+        
+        // Get icon for menu item
+        $icon = $this->get_menu_icon( $item );
+        
+        $item_output = isset( $args->before ) ? $args->before : '';
+        $item_output .= '<a' . $attributes .'>';
+        $item_output .= $icon;
+        $item_output .= '<span class="nav-text">';
+        $item_output .= isset( $args->link_before ) ? $args->link_before : '';
+        $item_output .= apply_filters( 'the_title', $item->title, $item->ID );
+        $item_output .= isset( $args->link_after ) ? $args->link_after : '';
+        $item_output .= '</span></a>';
+        $item_output .= isset( $args->after ) ? $args->after : '';
+        
+        $output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args );
+    }
+
+    function end_el( &$output, $item, $depth = 0, $args = null ) {
+        $output .= "</li>\n";
+    }
+    
+    private function get_menu_icon( $item ) {
+        $icons = array(
+            'home' => '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>',
+            'artists' => '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>',
+            'releases' => '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg>',
+            'tracks' => '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>',
+            'blog' => '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>',
+        );
+        
+        $url = strtolower( $item->url );
+        $title = strtolower( $item->title );
+        
+        if ( strpos( $url, home_url() ) === 0 && strlen( $url ) === strlen( home_url() ) ) {
+            return $icons['home'];
+        } elseif ( strpos( $title, 'artist' ) !== false || strpos( $url, 'artist' ) !== false ) {
+            return $icons['artists'];
+        } elseif ( strpos( $title, 'release' ) !== false || strpos( $url, 'release' ) !== false ) {
+            return $icons['releases'];
+        } elseif ( strpos( $title, 'track' ) !== false || strpos( $url, 'track' ) !== false ) {
+            return $icons['tracks'];
+        } elseif ( strpos( $title, 'blog' ) !== false || strpos( $url, 'blog' ) !== false ) {
+            return $icons['blog'];
+        }
+        
+        return $icons['home']; // Default icon
+    }
+/**
+ * Fallback menu for sidebar when no menu is assigned
+ */
+function sumpview_sidebar_fallback_menu() {
+    echo '<ul class="sidebar-menu-items">';
+    echo '<li><a href="' . esc_url( home_url( '/' ) ) . '" title="Home">';
+    echo '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>';
+    echo '<span class="nav-text">Home</span></a></li>';
+    echo '<li><a href="' . get_post_type_archive_link('artist') . '" title="Artists">';
+    echo '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>';
+    echo '<span class="nav-text">Artists</span></a></li>';
+    echo '<li><a href="' . get_post_type_archive_link('release') . '" title="Releases">';
+    echo '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg>';
+    echo '<span class="nav-text">Releases</span></a></li>';
+    echo '<li><a href="' . get_post_type_archive_link('track') . '" title="Tracks">';
+    echo '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>';
+    echo '<span class="nav-text">Tracks</span></a></li>';
+    echo '<li><a href="' . (get_permalink(get_option('page_for_posts')) ?: home_url('/blog')) . '" title="Blog">';
+    echo '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>';
+    echo '<span class="nav-text">Blog</span></a></li>';
+    echo '</ul>';
+}
+}
+/**
  * Add custom template redirects for our custom post types
  */
-function sumpview_template_redirect() {
-    if ( is_singular( 'release' ) ) {
-        $template = locate_template( 'templates/single-release.php' );
-        if ( $template ) {
-            include $template;
-            exit;
-        }
-    }
-    
-    if ( is_singular( 'artist' ) ) {
-        $template = locate_template( 'templates/single-artist.php' );
-        if ( $template ) {
-            include $template;
-            exit;
-        }
-    }
-    
-    if ( is_post_type_archive( 'artist' ) ) {
-        $template = locate_template( 'templates/archive-artist.php' );
-        if ( $template ) {
-            include $template;
-            exit;
-        }
-    }
-    
-    if ( is_post_type_archive( 'track' ) ) {
-        $template = locate_template( 'templates/archive-track.php' );
-        if ( $template ) {
-            include $template;
-            exit;
-        }
-    }
-    
-    if ( is_post_type_archive( 'release' ) ) {
-        $template = locate_template( 'templates/archive-release.php' );
-        if ( $template ) {
-            include $template;
-            exit;
-        }
-    }
-}
-add_action( 'template_redirect', 'sumpview_template_redirect' );
 /**
  * Load developer tools if they exist.
  * This should be the last thing included.
