@@ -1,8 +1,8 @@
 <?php
 /**
  * The template for displaying all single 'release' posts.
- * This is the crucial file that enables Elementor Theme Builder to apply a
- * template to a single release page, matching the /release/{arg} structure.
+ * This file is required for the Elementor Theme Builder to detect and apply a Single Release template,
+ * fulfilling the structure for /release/{arg}.
  *
  * @package SumpView
  */
@@ -15,11 +15,10 @@ get_header();
     while ( have_posts() ) :
         the_post();
         
-        // Elementor Theme Builder content will be injected via this function.
-        // Your SumpCore_Single_Release_Widget should be placed in the Theme Builder template.
+        // Elementor Theme Builder will inject its content here.
         the_content();
         
-    endwhile; // End of the loop.
+    endwhile;
     ?>
 </main><?php
 get_footer();

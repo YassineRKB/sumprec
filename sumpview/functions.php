@@ -210,9 +210,43 @@ function sumpview_sidebar_fallback_menu() {
     echo '</ul>';
 }
 }
+
 /**
- * Add custom template redirects for our custom post types
+ * REDIRECTION FIX: Redirects access to single CPT base URLs (e.g., /release/) 
+ * to their respective archive pages (e.g., /releases/).
  */
+function sumpview_redirect_empty_singles() {
+    global $wp_query;
+
+    // Safety check: Only run on the main query and if WordPress is classifying it as a 404 (failed lookup).
+    if ( ! is_admin() && is_main_query() && is_404() ) {
+
+        $cpts_to_check = array('release', 'artist');
+        
+        // This checks if the query failed because no specific post was found.
+        if ( isset( $wp_query->query['name'] ) ) {
+            $queried_slug = $wp_query->query['name'];
+            
+            foreach ($cpts_to_check as $post_type) {
+                $post_type_object = get_post_type_object( $post_type );
+                
+                // If the requested slug (which led to the 404) matches the singular CPT slug, redirect.
+                if ( $queried_slug === $post_type_object->rewrite['slug'] ) {
+                    $archive_link = get_post_type_archive_link( $post_type );
+                    
+                    if ( $archive_link ) {
+                        // Reset the 404 header and redirect.
+                        // status_header( 200 ); // No need to reset 404 if we are redirecting away
+                        wp_redirect( $archive_link, 301 ); // Permanent redirect
+                        exit;
+                    }
+                }
+            }
+        }
+    }
+}
+add_action( 'template_redirect', 'sumpview_redirect_empty_singles', 1 );
+
 /**
  * Load developer tools if they exist.
  * This should be the last thing included.

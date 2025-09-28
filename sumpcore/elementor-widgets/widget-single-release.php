@@ -252,14 +252,18 @@ class SumpCore_Single_Release_Widget extends \Elementor\Widget_Base {
 
         <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Get the release ID safely, default to null if not found
+            const releaseId = <?php echo $release_id ? (int)$release_id : 'null'; ?>;
+            
             // Handle track clicks in the tracklist
             document.querySelectorAll('.track-item').forEach(function(item, index) {
                 item.style.cursor = 'pointer';
                 item.addEventListener('click', function() {
                     const trackSrc = this.dataset.trackSrc;
-                    if (trackSrc && window.sumpPlayer) {
-                        const releaseId = <?php echo $release_id; ?>;
+                    if (trackSrc && window.sumpPlayer && releaseId !== null) {
+                        
                         if (window.sumpPlayer.loadPlaylistById) {
+                            // Load the playlist and then start the specific track by index
                             window.sumpPlayer.loadPlaylistById(releaseId).then(() => {
                                 window.sumpPlayer.loadTrack(index, true);
                             });

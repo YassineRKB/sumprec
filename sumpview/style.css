@@ -1324,9 +1324,9 @@ body.menu-open {
 }
 
 .track-list ol {
-    list-style: none;
+    list-style: disc;
+    padding-left: 20px;
     padding: 0;
-    counter-reset: track-counter;
 }
 
 .track-list li {
@@ -1345,11 +1345,11 @@ body.menu-open {
 }
 
 .track-list li::before {
-    counter-increment: track-counter;
-    content: counter(track-counter);
+    content: '\25B6'; 
     margin-right: 20px;
-    color: var(--text-secondary);
-    font-size: 16px;
+    color: var(--accent-red);
+    font-size: 10px;
+    line-height: 20px;
     min-width: 20px;
     text-align: right;
 }
