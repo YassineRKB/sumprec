@@ -108,11 +108,27 @@ class SumpCore_Single_Artist_Widget extends \Elementor\Widget_Base {
         
         // Determine which artist to show
         $artist_id = null;
+        
         if ($settings['source'] === 'current') {
-            $artist_id = get_the_ID();
-            if (get_post_type($artist_id) !== 'artist') {
-                $artist_id = null;
+            $current_id = get_the_ID();
+            $is_elementor_edit_mode = class_exists('\Elementor\Plugin') && \Elementor\Plugin::$instance->editor->is_edit_mode();
+            
+            // 1. Check for valid live post
+            if ($current_id && get_post_type($current_id) === 'artist') {
+                $artist_id = $current_id;
             }
+            
+            // 2. Elementor Fallback: If no valid post is found but we are in the editor, load the latest one for preview.
+            if (!$artist_id && $is_elementor_edit_mode) {
+                 $latest = get_posts([
+                     'post_type' => 'artist',
+                     'posts_per_page' => 1, 
+                     'fields' => 'ids', 
+                     'post_status' => 'publish'
+                 ]);
+                 $artist_id = !empty($latest) ? $latest[0] : null;
+            }
+
         } elseif ($settings['source'] === 'latest') {
             $latest = get_posts(['post_type' => 'artist', 'posts_per_page' => 1, 'fields' => 'ids']);
             $artist_id = !empty($latest) ? $latest[0] : null;
@@ -121,7 +137,16 @@ class SumpCore_Single_Artist_Widget extends \Elementor\Widget_Base {
         }
 
         if (!$artist_id) {
-            echo '<p>' . esc_html__('No artist found.', 'sumpcore') . '</p>';
+            $is_elementor_edit_mode = class_exists('\Elementor\Plugin') && \Elementor\Plugin::$instance->editor->is_edit_mode();
+            
+            if ($is_elementor_edit_mode) {
+                // Display a clear, styled message to the editor user
+                echo '<div style="background-color: #333; color: #fff; padding: 15px; border-left: 5px solid #c70000; font-family: sans-serif;">' . 
+                     esc_html__('Single Artist Widget: No target artist found. The widget is using the LATEST artist for preview. For accurate preview, set Elementor\'s "Preview Settings" to a specific artist post.', 'sumpcore') . 
+                     '</div>';
+            } else {
+                 echo '<p>' . esc_html__('No artist found.', 'sumpcore') . '</p>';
+            }
             return;
         }
 
