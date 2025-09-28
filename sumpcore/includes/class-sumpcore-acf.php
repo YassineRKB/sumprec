@@ -32,59 +32,85 @@ class SumpCore_ACF {
             return;
         }
 
+        // --- Store Link Definitions ---
+        // Define all store fields here to inject them into the main array
+        $store_link_fields = array(
+            array(
+                'key' => 'field_store_link_spotify',
+                'label' => 'Spotify Link',
+                'name' => 'store_link_spotify',
+                'type' => 'url',
+                'placeholder' => 'https://open.spotify.com/...',
+            ),
+            array(
+                'key' => 'field_store_link_junodownload',
+                'label' => 'Juno Download Link',
+                'name' => 'store_link_junodownload',
+                'type' => 'url',
+                'placeholder' => 'https://www.junodownload.com/...',
+            ),
+            array(
+                'key' => 'field_store_link_bandcamp',
+                'label' => 'Bandcamp Link',
+                'name' => 'store_link_bandcamp',
+                'type' => 'url',
+                'placeholder' => 'https://yourband.bandcamp.com/...',
+            ),
+            array(
+                'key' => 'field_store_link_apple_music',
+                'label' => 'Apple Music Link',
+                'name' => 'store_link_apple_music',
+                'type' => 'url',
+                'placeholder' => 'https://music.apple.com/...',
+            ),
+            array(
+                'key' => 'field_store_link_tidal',
+                'label' => 'Tidal Link',
+                'name' => 'store_link_tidal',
+                'type' => 'url',
+                'placeholder' => 'https://tidal.com/browse/album/...',
+            ),
+            array(
+                'key' => 'field_store_link_youtube',
+                'label' => 'YouTube Link',
+                'name' => 'store_link_youtube',
+                'type' => 'url',
+                'placeholder' => 'https://www.youtube.com/watch?v=...',
+            ),
+        );
+        
+        // Base fields array (excluding the old repeater)
+        $base_fields = array(
+            array(
+                'key' => 'field_release_associated_artists',
+                'label' => 'Associated Artist(s)',
+                'name' => 'associated_artists',
+                'type' => 'relationship',
+                'post_type' => array('artist'),
+                'filters' => array('search'),
+                'elements' => array('featured_image'),
+                'min' => 1,
+                'return_format' => 'id',
+            ),
+            array(
+                'key' => 'field_release_date',
+                'label' => 'Release Date',
+                'name' => 'release_date',
+                'type' => 'date_picker',
+                'display_format' => 'F j, Y',
+                'return_format' => 'Y-m-d',
+            ),
+        );
+        
+        // Merge the base fields with the new store link fields
+        $release_details_fields = array_merge($base_fields, $store_link_fields);
+
+
         // Field Group: Release Details
         acf_add_local_field_group(array(
             'key' => 'group_release_details',
             'title' => 'Release Details',
-            'fields' => array(
-                array(
-                    'key' => 'field_release_associated_artists',
-                    'label' => 'Associated Artist(s)',
-                    'name' => 'associated_artists',
-                    'type' => 'relationship',
-                    'post_type' => array('artist'),
-                    'filters' => array('search'),
-                    'elements' => array('featured_image'),
-                    'min' => 1,
-                    'return_format' => 'id',
-                ),
-                array(
-                    'key' => 'field_release_date',
-                    'label' => 'Release Date',
-                    'name' => 'release_date',
-                    'type' => 'date_picker',
-                    'display_format' => 'F j, Y',
-                    'return_format' => 'Y-m-d',
-                ),
-                array(
-                    'key' => 'field_release_store_links',
-                    'label' => 'Store & Streaming Links',
-                    'name' => 'store_links',
-                    'type' => 'repeater',
-                    'instructions' => 'Add links to external stores like Juno Download, Spotify, etc.',
-                    'layout' => 'table',
-                    'button_label' => 'Add Link',
-                    'sub_fields' => array(
-                        array(
-                            'key' => 'field_store_name',
-                            'label' => 'Platform',
-                            'name' => 'platform',
-                            'type' => 'select',
-                            'choices' => array(
-                                'spotify' => 'Spotify',
-                                'junodownload' => 'Juno Download',
-                            ),
-                        ),
-                        array(
-                            'key' => 'field_store_url',
-                            'label' => 'URL',
-                            'name' => 'url',
-                            'type' => 'url',
-                            'placeholder' => 'https://...',
-                        ),
-                    ),
-                ),
-            ),
+            'fields' => $release_details_fields, // Use the merged array
             'location' => array(
                 array(
                     array(
@@ -158,4 +184,3 @@ class SumpCore_ACF {
         ));
     }
 }
-

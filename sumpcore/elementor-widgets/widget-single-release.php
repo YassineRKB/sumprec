@@ -152,8 +152,30 @@ class SumpCore_Single_Release_Widget extends \Elementor\Widget_Base {
 
         $release = get_post($release_id);
         $artists = get_field('associated_artists', $release_id);
-        $store_links = get_field('store_links', $release_id);
         $release_date = get_field('release_date', $release_id);
+        
+        // --- NEW LINK RETRIEVAL LOGIC ---
+        $available_links = [];
+        $platforms = array(
+            'spotify' => 'Spotify',
+            'junodownload' => 'Juno Download',
+            'bandcamp' => 'Bandcamp',
+            'apple_music' => 'Apple Music',
+            'tidal' => 'Tidal',
+            'youtube' => 'YouTube'
+        );
+        
+        foreach ($platforms as $slug => $label) {
+            $url = get_field("store_link_{$slug}", $release_id);
+            if (!empty($url)) {
+                $available_links[] = [
+                    'platform' => $slug,
+                    'url' => $url,
+                    'label' => $label
+                ];
+            }
+        }
+        // --- END NEW LINK RETRIEVAL LOGIC ---
         ?>
         <div class="sump-single-release">
             <div class="release-container">
@@ -169,12 +191,12 @@ class SumpCore_Single_Release_Widget extends \Elementor\Widget_Base {
                             Play Album
                         </button>
 
-                        <?php if ($settings['show_store_links'] === 'yes' && $store_links) : ?>
+                        <?php if ($settings['show_store_links'] === 'yes' && !empty($available_links)) : ?>
                             <div class="store-links">
                                 <h3 class="links-title">Available On</h3>
-                                <?php foreach ($store_links as $link) : ?>
+                                <?php foreach ($available_links as $link) : ?>
                                     <a href="<?php echo esc_url($link['url']); ?>" target="_blank" class="store-link-btn platform-<?php echo esc_attr($link['platform']); ?>">
-                                        <?php echo esc_html(ucfirst($link['platform'])); ?>
+                                        <?php echo esc_html($link['label']); ?>
                                     </a>
                                 <?php endforeach; ?>
                             </div>
